@@ -1,0 +1,669 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>TO MY LOVE🩷</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="language" content="Love">
+    <meta name="github" content="https://github.com/AfganCandra13/Love.content">
+    <meta name="describe" content=" Belajar membuat animasi love  ">
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/sun0225SUN/photos/img/20210715233345.png">
+
+    <style>
+        /* FADE-IN EFFECT */
+.fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 99999;
+    opacity: 1;
+    transition: opacity 1.5s ease-in-out;
+    pointer-events: none;
+}
+
+.fade-overlay.hidden {
+    opacity: 0;
+}
+
+/* LOADING SPINNER */
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 91, 165, 0.2);
+    border-top: 4px solid #ff5ba5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading.hidden {
+    display: none;
+}
+
+        html,
+        body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .namebox {
+            color: #ff5ba5;
+            position: absolute;
+            z-index: 9999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: 1s;
+            display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+        }
+
+        /* Hide scrollbar but keep functionality */
+.namebox::-webkit-scrollbar {
+    width: 6px;
+}
+
+.namebox::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.namebox::-webkit-scrollbar-thumb {
+    background: rgba(255, 91, 165, 0.3);
+    border-radius: 10px;
+}
+
+        .namebox h1 {
+    margin: 0 auto;
+    font-size: clamp(1.5rem, 6vw, 3rem); /* Lebih besar range nya */
+    text-align: center;
+    padding: 0 20px;
+    text-shadow: 0 0 20px rgba(255, 91, 165, 0.8); /* Tambah glow */
+}
+
+/* Extra styling for mobile */
+@media (max-width: 768px) {
+    .namebox h1 {
+        font-size: clamp(1.8rem, 7vw, 2.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .namebox h1 {
+        font-size: clamp(2rem, 8vw, 2.2rem);
+        padding: 0 10px;
+    }
+}
+    
+        /* CONTROL BUTTONS CONTAINER */
+.controls-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+/* BASE BUTTON STYLE */
+.control-btn {
+    background: rgba(255, 91, 165, 0.15);
+    border: 2px solid rgba(255, 91, 165, 0.4);
+    color: #ff5ba5;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(255, 91, 165, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HOVER EFFECT RIPPLE */
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 91, 165, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.control-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.control-btn:hover {
+    background: rgba(255, 91, 165, 0.25);
+    border-color: rgba(255, 91, 165, 0.8);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 91, 165, 0.3);
+}
+
+.control-btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 10px rgba(255, 91, 165, 0.2);
+}
+
+/* ICON STYLES */
+.btn-icon {
+    font-size: 16px;
+    z-index: 1;
+}
+.namebox h1 {
+        font-size: clamp(1rem, 4vw, 1.5rem);
+    }
+
+.btn-text {
+    z-index: 1;
+}
+
+/* REPEAT BUTTON SPECIFIC */
+#repeatBtn {
+    background: rgba(255, 48, 197, 0.15);
+    border-color: rgba(255, 48, 197, 0.4);
+    color: #ff30c5;
+}
+
+#repeatBtn::before {
+    background: rgba(255, 48, 197, 0.3);
+}
+
+#repeatBtn:hover {
+    background: rgba(255, 48, 197, 0.25);
+    border-color: rgba(255, 48, 197, 0.8);
+    color: #fff;
+}
+
+/* PULSE ANIMATION FOR REPEAT BUTTON */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 48, 197, 0.1);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(255, 48, 197, 0.4);
+    }
+}
+
+#repeatBtn.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .controls-container {
+        bottom: 15px;
+        right: 15px;
+        gap: 10px;
+    }
+}
+    .control-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    .btn-icon {
+        font-size: 14px;
+    }
+
+    
+
+@media (max-width: 480px) {
+    .controls-container {
+        bottom: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+
+    .control-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+}
+
+    /* IMAGE CONTAINER & STYLING */
+.image-container {
+    position: relative;
+    display: inline-block;
+    animation: fadeInImage 2s ease-in-out forwards;
+    animation-delay: 0.5s;
+    opacity: 0;
+}
+
+/* MESSAGE CONTAINER */
+.message-container {
+    margin-top: 20px;
+    max-width: 90%;
+    text-align: center;
+    animation: fadeInMessage 2s ease-in-out forwards;
+    animation-delay: 1s;
+    opacity: 0;
+}
+
+/* GREETING TEXT (Header) */
+.greeting-text {
+    font-family: 'Comic Sans MS', 'Segoe UI', cursive, sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: #ff5ba5;
+    margin: 0 0 20px 0;
+    font-weight: bold;
+    text-shadow: 
+        0 0 10px rgba(255, 91, 165, 0.8),
+        0 0 20px rgba(255, 91, 165, 0.5);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* MESSAGE TEXT (Body) */
+.message-text {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    color: #ffffff;
+    line-height: 1.8;
+    margin: 0;
+    padding: 20px;
+    background: rgba(255, 91, 165, 0.1);
+    border: 2px solid rgba(255, 91, 165, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(255, 91, 165, 0.2),
+        inset 0 0 20px rgba(255, 91, 165, 0.1);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Custom Scrollbar for message */
+.message-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-text::-webkit-scrollbar-track {
+    background: rgba(255, 91, 165, 0.1);
+    border-radius: 10px;
+}
+
+.message-text::-webkit-scrollbar-thumb {
+    background: rgba(255, 91, 165, 0.5);
+    border-radius: 10px;
+}
+
+.message-text::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 91, 165, 0.8);
+}
+
+/* FADE IN ANIMATION for Message */
+@keyframes fadeInMessage {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* GLOW PULSE for Greeting */
+@keyframes glowPulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(255, 91, 165, 0.8),
+            0 0 20px rgba(255, 91, 165, 0.5);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px rgba(255, 91, 165, 1),
+            0 0 40px rgba(255, 91, 165, 0.8),
+            0 0 60px rgba(255, 91, 165, 0.5);
+    }
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .message-container {
+        margin-top: 20px;
+        max-width: 95%;
+    }
+
+    .greeting-text {
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        margin-bottom: 15px;
+    }
+
+    .message-text {
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        line-height: 1.6;
+        padding: 15px;
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .message-container {
+        margin-top: 15px;
+        max-width: 100%;
+    }
+
+    .greeting-text {
+        font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+        margin-bottom: 10px;
+    }
+
+    .message-text {
+        font-size: clamp(0.8rem, 3.5vw, 1rem);
+        line-height: 1.5;
+        padding: 12px;
+        border-radius: 12px;
+        max-height: 50vh;
+    }
+
+    .message-text br {
+        display: none; /* Remove manual line breaks on very small screens */
+    }
+}
+
+/* LANDSCAPE MODE OPTIMIZATION */
+@media (max-height: 600px) and (orientation: landscape) {
+    .namebox {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        max-width: 90vw;
+    }
+
+    .image-container {
+        flex-shrink: 0;
+    }
+
+    .message-container {
+        margin-top: 0;
+        text-align: left;
+        max-height: 70vh;
+    }
+
+    .message-text {
+        max-height: 50vh;
+        font-size: 0.85rem;
+    }
+}
+
+.love-image {
+    width: clamp(120px, 25vw, 250px);
+    height: clamp(120px, 25vw, 250px);
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ff5ba5;
+    box-shadow: 
+        0 0 30px rgba(255, 91, 165, 0.6),
+        0 0 60px rgba(255, 91, 165, 0.4),
+        inset 0 0 20px rgba(255, 91, 165, 0.2);
+    transition: all 0.5s ease;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+.love-image:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 40px rgba(255, 91, 165, 0.8),
+        0 0 80px rgba(255, 91, 165, 0.6),
+        inset 0 0 30px rgba(255, 91, 165, 0.3);
+}
+
+/* FADE IN ANIMATION */
+@keyframes fadeInImage {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-10deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* HEARTBEAT ANIMATION */
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    10%, 30% {
+        transform: scale(1.05);
+    }
+    20%, 40% {
+        transform: scale(1);
+    }
+}
+
+/* RESPONSIVE IMAGE SIZES */
+@media (max-width: 768px) {
+    .love-image {
+        width: clamp(100px, 22vw, 200px);
+        height: clamp(100px, 22vw, 200px);
+        border-width: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .love-image {
+        width: clamp(80px, 20vw, 150px);
+        height: clamp(80px, 20vw, 150px);
+        border-width: 3px;
+    }
+}
+
+/* OPTIONAL: Add decorative hearts around image */
+.image-container::before,
+.image-container::after {
+    content: '💕';
+    position: absolute;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    animation: floatHeart 3s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+.image-container::before {
+    top: -10%;
+    left: -15%;
+    animation-delay: 0s;
+}
+
+.image-container::after {
+    bottom: -10%;
+    right: -15%;
+    animation-delay: 1.5s;
+}
+
+@keyframes floatHeart {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- FADE IN OVERLAY -->
+<div class="fade-overlay" id="fadeOverlay"></div>
+
+<!-- LOADING SPINNER -->
+<div class="loading" id="loading">
+    <div class="spinner"></div>
+</div>
+
+    <canvas id="canvas-matrix" style="position:absolute;width:100%;height:100%;z-index:8888"></canvas>
+    <canvas style="position:absolute;width:100%;height:100%;z-index:9999" class="canvas"></canvas>
+
+    <div class="overlay">
+        <div class="tabs">
+            <div class="tabs-labels">
+                <span class="tabs-label">Commands</span>
+                <span class="tabs-label">Info</span>
+                <span class="tabs-label">Share</span>
+            </div>
+            <div class="tabs-panels">
+                <ul class="tabs-panel commands"></ul>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="pinkboard" style="position:absolute;width:100%;height:100%;z-index:8888"></canvas>
+
+    <script src="js/index.js"></script>
+    <script src="js/heart.js"></script>
+    <script src="js/matrix.js"></script>
+
+    <div class="namebox" style="opacity: 0;">
+    <div class="image-container">
+        <img src="images/foto.png" alt="My Love" class="love-image">
+    </div>
+    <div class="message-container">
+        <h2 class="greeting-text">Happy New Year 2026! 🎉</h2>
+        
+            
+        </div>
+    </div>
+</div>
+
+    <!-- AUDIO AUTOPLAY -->
+    <audio id="bgm"
+        src="audio02.mp3"
+        autoplay
+        loop
+        muted>
+    </audio>
+
+    <!-- TOMBOL PLAY/PAUSE -->
+    <!-- CONTROL BUTTONS -->
+<div class="controls-container">
+    <button class="control-btn" id="repeatBtn">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-text"></span>
+    </button>
+    <button class="control-btn" id="musicToggle">
+        <span class="btn-icon">🎵</span>
+        <span class="btn-text"></span>
+    </button>
+</div>
+
+    <script>
+        const bgm = document.getElementById('bgm');
+        const toggleBtn = document.getElementById('musicToggle');
+
+        toggleBtn.onclick = () => {
+    if (bgm.paused) {
+        bgm.play();
+        toggleBtn.querySelector('.btn-text').textContent = 'Pause';
+    } else {
+        bgm.pause();
+        toggleBtn.querySelector('.btn-text').textContent = 'Play';
+    }
+};
+        // AUTOPLAY FIX (muted → unmute)
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                bgm.muted = false;
+                bgm.play().catch(() => {
+                    console.log("Browser memblokir autoplay, musik akan jalan saat user menyentuh layar.");
+                });
+            }, 500);
+        });
+
+        // FADE IN EFFECT ON PAGE LOAD
+window.addEventListener('load', function() {
+    const fadeOverlay = document.getElementById('fadeOverlay');
+    const loading = document.getElementById('loading');
+    
+    setTimeout(() => {
+        loading.classList.add('hidden');
+        fadeOverlay.classList.add('hidden');
+        
+        // Remove from DOM after transition
+        setTimeout(() => {
+            fadeOverlay.remove();
+            loading.remove();
+        }, 1500);
+    }, 500);
+});
+
+    // REPEAT ANIMATION FUNCTION
+const repeatBtn = document.getElementById('repeatBtn');
+
+repeatBtn.onclick = () => {
+    location.reload(); // Reload page to restart animation
+};
+
+// Add pulse effect when animation completes (adjust timing)
+setTimeout(() => {
+    repeatBtn.classList.add('pulse');
+}, 20000); // 15 detik setelah animasi selesai
+
+
+// Sync image fade-in with heart animation
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        const namebox = document.querySelector('.namebox');
+        if (namebox) {
+            namebox.style.opacity = '1';
+        }
+    }, 21000); // Muncul setelah 12 detik (adjust sesuai timing animasi)
+});
+
+
+    </script>
+
+</body>
+</html>
